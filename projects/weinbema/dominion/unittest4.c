@@ -15,6 +15,7 @@
 #include <string.h>
 
 char* getEnumName(int enumValue);
+int independentlyVerifyCost(int enumValue);
 
 int main(int argc, char** argv) {
 
@@ -133,9 +134,29 @@ int main(int argc, char** argv) {
 
         char *returnedName;
 
-        returnedName = getEnumName(0);
+        int incorrectCostFound = 0;
 
-        printf("Name %s", returnedName);
+        for(y = minEnum; y <= maxEnum; y++) {
+            returnedName = getEnumName(y);
+            printf("Card: %s\n", returnedName);
+            printf("Enum value of card: %d\n", y);
+            printf("Indendently verified cost: %d\n", independentlyVerifyCost(y));
+            printf("getCost returned cost: %d\n", getCost(y));
+            if (independentlyVerifyCost(y) == getCost(y)) {
+                printf("Grade: PASS\n\n");
+            } else {
+                printf("Grade: FAILURE\n\n");
+                failureFound = 1;
+                incorrectCostFound += 1;
+            }
+        }
+
+        printf("Independently verified cost for %d of %d cards implemented in software under test, ", (y - 1), (maxEnum - minEnum));
+        if (incorrectCostFound > 0) {
+            printf("and identified %d cards with an incorrect cost.\n", incorrectCostFound);
+        } else {
+            printf("and determiend ALL card costs are accurate.\n");
+        }
 
     }
 
@@ -238,4 +259,98 @@ char* getEnumName(int enumValue) {
     }
 
     return name;
+}
+
+int independentlyVerifyCost(int enumValue) {
+
+    char verifiedCost;
+
+    switch (enumValue) {
+        case 0:
+            verifiedCost = 0;
+            break;
+        case 1:
+            verifiedCost = 2;
+            break;
+        case 2:
+            verifiedCost = 5;
+            break;
+        case 3:
+            verifiedCost = 8;
+            break;
+        case 4:
+            verifiedCost = 0;
+            break;
+        case 5:
+            verifiedCost = 3;
+            break;
+        case 6:
+            verifiedCost = 6;
+            break;
+        case 7:
+            verifiedCost = 6;
+            break;
+        case 8:
+            verifiedCost = 5;
+            break;
+        case 9:
+            verifiedCost = 4;
+            break;
+        case 10:
+            verifiedCost = 4;
+            break;
+        case 11:
+            verifiedCost = 5;
+            break;
+        case 12:
+            verifiedCost = 4;
+            break;
+        case 13:
+            verifiedCost = 4;
+            break;
+        case 14:
+            verifiedCost = 3;
+            break;
+        case 15:
+            verifiedCost = 4;
+            break;
+        case 16:
+            verifiedCost = 3;
+            break;
+        case 17:
+            verifiedCost = 5;
+            break;
+        case 18:
+            verifiedCost = 3;
+            break;
+        case 19:
+            verifiedCost = 5;
+            break;
+        case 20:
+            verifiedCost = 3;
+            break;
+        case 21:
+            verifiedCost = 4;
+            break;
+        case 22:
+            verifiedCost = 2;
+            break;
+        case 23:
+            verifiedCost = 5;
+            break;
+        case 24:
+            verifiedCost = 4;
+            break;
+        case 25:
+            verifiedCost = 4;
+            break;
+        case 26:
+            verifiedCost = 4;
+            break;
+        default:
+            verifiedCost = -1;
+            break;
+    }
+
+    return verifiedCost;
 }

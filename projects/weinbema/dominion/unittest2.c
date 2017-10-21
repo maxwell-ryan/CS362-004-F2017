@@ -35,13 +35,13 @@ int main(int argc, char** argv) {
     //enum values:      15     12        22       24        25         26            8            20         23       19
     int kCards[10] = {baron, remodel, embargo, salvager, sea_hag, treasure_map, council_room, ambassador, outpost, tribute};
 
-    printf("\n\n-----------------------------------------\nUNIT TEST 2: Testing function: handCard");
+    printf("\n\n-----------------------------------------\nUNIT TEST 2: Testing function: handCard\n");
     printf("-----------------------------------------\nTEST 1: handCard uses the correct currentPlayer (the player who's turn it currently is)\n\n");
     for (i = 0; i < numPlayers; i++) {
         for (j = 1; j <= 1; j++) {
 
             //clear gameState memory to null bytes
-            memset(&testGame, 0, sizeof(struct gameState));
+            memset(&testGame, '\0', sizeof(struct gameState));
 
             //set turn to current loop counter
             testGame.whoseTurn = i;

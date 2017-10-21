@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
     int kCards[10] = {baron, remodel, embargo, salvager, sea_hag, treasure_map, council_room, ambassador, outpost, tribute};
 
     //game state struct
-    struct gameState testGameState;
+    struct gameState testGame;
     //loop counters
     int i, j, x;
     //variable containers
@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
     int maxDeckCount = 4;
     int minDeckCount = -1;
 
-    int preShuffleDeckOrder[MAX_DECK];
+    int preShuffleDeck[MAX_DECK];
 
     //bool to identify if test result 0 = shuffle -1 = no shuffle
     int result;
@@ -44,33 +44,37 @@ int main(int argc, char** argv) {
     //bool to track if particular test failed
     int failureFound = 0;
 
-    printf("\n\n-----------------------------------------\nUNITTEST 1: Testing function: shuffle");
-    printf("\n-----------------------------------------\nTEST 1: Shuffle only when deck count greater than 1\n\n");
+    printf("\n\n-----------------------------------------\nUNITTEST 1: Testing function: shuffle\n");
+    printf("-----------------------------------------\nTEST 1: Shuffle only when deck count greater than 1\n\n");
     for (i = 0; i < numPlayers; i++) {
         for (j = minDeckCount; j <= maxDeckCount; j++) {
 
             //clear gameState memory to null bytes
-            memset(&testGameState, 0, sizeof(struct gameState));
+            memset(&testGame, '\0', sizeof(struct gameState));
 
             //init gameState
-            returnInt = initializeGame(numPlayers, kCards, randomSeed, &testGameState);
+            returnInt = initializeGame(numPlayers, kCards, randomSeed, &testGame);
 
-            testGameState.deckCount[i] = 0;
+            testGame.deckCount[i] = 0;
+
             //fill deck with random cards, if deck count greater than 0
+            //note: random refers to a random card for game's available kingdom cards, not a truly 'random' card
             if (j > 0) {
+
                 for (x = 0; x < j; x++) {
+
                     randomCard = (rand() % (sizeof(kCards) / sizeof(int)));
                     //printf("Random card: %d\n", kCards[randomCard]);
                     //fill deck with random card from available kingdom cards
-                    testGameState.deck[i][x] = kCards[randomCard];
-                    testGameState.deckCount[i]++;
+                    testGame.deck[i][x] = kCards[randomCard];
+                    testGame.deckCount[i]++;
                 }
             }
 
 
             printf("Player: %d\nDeck count: %d\n", i+1, j);
 
-            result = shuffle(i, &testGameState);
+            result = shuffle(i, &testGame);
 
             //set expectation to only shuffle if deckCount greater than 1
             //note: shuffling a single card is pointless, deck state will remain unchanged after func call
@@ -102,32 +106,32 @@ int main(int argc, char** argv) {
         for (j = 0; j <= 5; j++) {
 
             //clear gameState memory to null bytes
-            memset(&testGameState, 0, sizeof(struct gameState));
+            memset(&testGame, '\0', sizeof(struct gameState));
 
             //init gameState
-            returnInt = initializeGame(numPlayers, kCards, randomSeed, &testGameState);
+            returnInt = initializeGame(numPlayers, kCards, randomSeed, &testGame);
 
-            testGameState.deckCount[i] = 0;
+            testGame.deckCount[i] = 0;
             //fill deck with random cards, if deck count greater than 0
             if (j > 0) {
                 for (x = 0; x < j; x++) {
                     randomCard = (rand() % (sizeof(kCards) / sizeof(int)));
-                    testGameState.deck[i][x] = kCards[randomCard];
-                    testGameState.deckCount[i]++;
+                    testGame.deck[i][x] = kCards[randomCard];
+                    testGame.deckCount[i]++;
                 }
             }
 
                 printf("Player: %d\nDeck count: %d\n", i+1, j);
 
-                result = shuffle(i, &testGameState);
+                result = shuffle(i, &testGame);
 
                 if (result == -1) {
                     printf("N/A - shuffle did not execute\n\n");
                 } else if (result == 0){
                     printf("Expect: %d\n", j);
-                    printf("Result: %d\n", testGameState.deckCount[i]);
+                    printf("Result: %d\n", testGame.deckCount[i]);
 
-                    if (testGameState.deckCount[i] == j) {
+                    if (testGame.deckCount[i] == j) {
                         printf("Grade: PASS\n\n");
                     } else {
                         printf("Grade: FAILURE\n\n");
@@ -142,37 +146,37 @@ int main(int argc, char** argv) {
         for (j = 1; j <= 20; j++) {
 
             //clear gameState memory to null bytes
-            memset(&testGameState, 0, sizeof(struct gameState));
+            memset(&testGame, '\0', sizeof(struct gameState));
 
             //init gameState
-            returnInt = initializeGame(numPlayers, kCards, randomSeed, &testGameState);
+            returnInt = initializeGame(numPlayers, kCards, randomSeed, &testGame);
 
             int PreShuffleDeckSum = 0;
             int PostShuffleDeckSum = 0;
-            testGameState.deckCount[i] = 0;
+            testGame.deckCount[i] = 0;
 
             //fill deck with random cards, if deck count greater than 0
             if (j > 0) {
                 for (x = 0; x < j; x++) {
                     randomCard = (rand() % (sizeof(kCards) / sizeof(int)));
-                    testGameState.deck[i][x] = kCards[randomCard];
+                    testGame.deck[i][x] = kCards[randomCard];
                     PreShuffleDeckSum += kCards[randomCard];
-                    testGameState.deckCount[i]++;
+                    testGame.deckCount[i]++;
                 }
             }
 
                 printf("Player: %d\nDeck count: %d\n", i+1, j);
 
-                result = shuffle(i, &testGameState);
+                result = shuffle(i, &testGame);
 
                 int orderChangeFound = 0;
                 //loop through entire deck, comparing each card in sequence to verify order changed
                 for (x = 0; x < j; x++) {
-                    if(preShuffleDeckOrder[x] != testGameState.deck[i][x]){
+                    if(preShuffleDeck[x] != testGame.deck[i][x]){
                         orderChangeFound = 1;
                     }
-                    PostShuffleDeckSum += testGameState.deck[i][x];
-                    //printf("Pre card: %d Post card: %d\n", preShuffleDeckOrder[x], testGameState.deck[i][x]);
+                    PostShuffleDeckSum += testGame.deck[i][x];
+                    //printf("Pre card: %d Post card: %d\n", preShuffleDeckOrder[x], testGame.deck[i][x]);
                 }
 
                 if (PreShuffleDeckSum == PostShuffleDeckSum) {
@@ -190,36 +194,37 @@ int main(int argc, char** argv) {
         for (j = 4; j <= 20; j++) {
 
             //clear gameState memory to null bytes
-            memset(&testGameState, 0, sizeof(struct gameState));
+            memset(&testGame, '\0', sizeof(struct gameState));
 
             //init gameState
-            returnInt = initializeGame(numPlayers, kCards, randomSeed, &testGameState);
+            returnInt = initializeGame(numPlayers, kCards, randomSeed, &testGame);
 
-            testGameState.deckCount[i] = 0;
+            testGame.deckCount[i] = 0;
             //fill deck with random cards, if deck count greater than 0
             if (j > 0) {
                 for (x = 0; x < j; x++) {
                     randomCard = (rand() % (sizeof(kCards) / sizeof(int)));
-                    testGameState.deck[i][x] = kCards[randomCard];
-                    preShuffleDeckOrder[x] = kCards[randomCard];
-                    testGameState.deckCount[i]++;
+                    testGame.deck[i][x] = kCards[randomCard];
+                    preShuffleDeck[x] = kCards[randomCard];
+                    testGame.deckCount[i]++;
                 }
             }
 
                 printf("Player: %d\nDeck count: %d\n", i+1, j);
 
-                result = shuffle(i, &testGameState);
+                result = shuffle(i, &testGame);
 
                 int orderChangeFound = 0;
                 //loop through entire deck, comparing each card in sequence to verify order changed
                 for (x = 0; x < j; x++) {
-                    if(preShuffleDeckOrder[x] != testGameState.deck[i][x]){
+                    if(preShuffleDeck[x] != testGame.deck[i][x]){
                         orderChangeFound = 1;
                     }
-                    //printf("Pre card: %d Post card: %d\n", preShuffleDeckOrder[x], testGameState.deck[i][x]);
+                    //printf("Pre card: %d Post card: %d\n", preShuffleDeckOrder[x], testGame.deck[i][x]);
                 }
 
-                if (orderChangeFound == 1) {
+                //verify shuffle altered order by checking bytes in deck changed from preShuffle bytes
+                if (memcmp(&preShuffleDeck, &testGame.deck[i], sizeof(int) * j) != 0) {
                     printf("Result: Shuffle altered deck order\n");
                     printf("Grade: PASS\n\n");
                 } else {
