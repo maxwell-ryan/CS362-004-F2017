@@ -1,4 +1,5 @@
 #include "dominion.h"
+#include "dominion_helpers.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -47,12 +48,15 @@ int main(int argc, char** argv) {
     int bonus = 0;
 
     //tracks position, in hand, of card under test
-    int handPos;
+    int handPos = 0;
 
     initializeGame(numPlayers, kCards, randomSeed, &controlGame);
 
-    printf("\n\n-----------------------------------------\nCARD TEST 1: Testing function: %s\n", CARDUNDERTEST);
+    printf("\n\n-----------------------------------------\nCARD TEST 2: Testing card: %s\n", CARDUNDERTEST);
     printf("-----------------------------------------\nTEST 1: %s results in exactly 2 treasure cards being added to player's hand\n\n", CARDUNDERTEST);
+
+    //set handPos card to adventurer
+    controlGame.hand[currentPlayer][handPos] = adventurer;
 
     //copy controlGame state to testGame state
     memcpy(&testGame, &controlGame, sizeof(struct gameState));
@@ -119,7 +123,7 @@ int main(int argc, char** argv) {
     //uncomment to prove unexpected change to hand makeup as result of playing adventurer would be detected by test
     //testGame.hand[currentPlayer][y] = duchy;
     int differentCardFound = 0;
-    for (int y = handPos; y < controlGame.handCount[currentPlayer]; y++) {
+    for (y = handPos; y < controlGame.handCount[currentPlayer]; y++) {
         if (testGame.hand[currentPlayer][y] != controlGame.hand[currentPlayer][y]){
             differentCardFound = 1;
         }
@@ -279,6 +283,63 @@ int main(int argc, char** argv) {
     printf("Expected treasure count delta: %d\n\n", noTreasureRemainingExpectedDelta);
 
     if ((postAdventurerTreasureCount - preAdventurerTreasureCount) == noTreasureRemainingExpectedDelta){
+        printf("Grade: PASS\n\n");
+    } else {
+        printf("Grade: FAILURE\n\n");
+        failureFound = 1;
+    }
+
+    printf("-----------------------------------------\nTEST 7: Player playing %s while deck contains no treasure cards, but discard does contain at least 2, results in 2 treasure added to hand and NO infinite loop\n\n", CARDUNDERTEST);
+
+    //copy controlGame state to testGame state
+    memcpy(&manipulatedControlGame, &controlGame, sizeof(struct gameState));
+
+    //create control scenario desired - current player's deck contains only copper treasure cards, no silver or gold
+    manipulatedControlGame.deckCount[currentPlayer] = 20;
+    for(x = 0; x < manipulatedControlGame.deckCount[currentPlayer]; x++) {
+            manipulatedControlGame.deck[currentPlayer][x] = kCards[2];
+    }
+    manipulatedControlGame.discardCount[currentPlayer] = 10;
+    for(x = 0; x < manipulatedControlGame.discardCount[currentPlayer]; x++) {
+            manipulatedControlGame.discard[currentPlayer][x] = copper;
+    }
+
+    memcpy(&testGame, &manipulatedControlGame, sizeof(struct gameState));
+
+
+    preAdventurerTreasureCount = 0;
+
+    //cycle over each card in players hand to get count of treasure cards before adventurer is played`
+    for(x = 0; x < testGame.handCount[currentPlayer]; x++){
+        if (testGame.hand[currentPlayer][x] == copper || testGame.hand[currentPlayer][x] == silver || testGame.hand[currentPlayer][x] == gold){
+            preAdventurerTreasureCount += 1;
+        }
+    }
+
+    cardEffect(adventurer, choice1, choice2, choice3, &testGame, handPos, &bonus);
+
+    postAdventurerTreasureCount = 0;
+
+    //cycle over each card in players hand to get count of treasure cards before adventurer is played`
+    for(x = 0; x < testGame.handCount[currentPlayer]; x++){
+        if (testGame.hand[currentPlayer][x] == copper || testGame.hand[currentPlayer][x] == silver || testGame.hand[currentPlayer][x] == gold){
+            postAdventurerTreasureCount += 1;
+        }
+    }
+
+    printf("Treasure cards in hand pre-adventurer: %d\n", preAdventurerTreasureCount);
+    printf("Treasure cards in hand post-adventurer: %d\n", postAdventurerTreasureCount);
+    printf("Treasure count delta: %d\n", (postAdventurerTreasureCount - preAdventurerTreasureCount));
+    printf("Expected treasure count delta: %d\n\n", expectedTreasureCountDelta);
+
+    /* UNCOMMENT block to debug test
+    * printf("Pre play deck count: %d\n", manipulatedControlGame.deckCount[currentPlayer]);
+    * printf("Post play deck count: %d\n", testGame.deckCount[currentPlayer]);
+    * printf("Pre play discard count: %d\n", manipulatedControlGame.discardCount[currentPlayer]);
+    * printf("Post play discard count: %d\n", testGame.discardCount[currentPlayer]);
+    */
+
+    if ((postAdventurerTreasureCount - preAdventurerTreasureCount) == expectedTreasureCountDelta){
         printf("Grade: PASS\n\n");
     } else {
         printf("Grade: FAILURE\n\n");

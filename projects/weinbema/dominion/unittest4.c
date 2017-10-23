@@ -8,6 +8,7 @@
 
 
 #include "dominion.h"
+#include "dominion_helpers.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -77,7 +78,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    printf("-----------------------------------------\nTEST 2: getCost returns -1 for invalid card enum values - minimum boundry\n\n");
+    printf("-----------------------------------------\nTEST 2: getCost returns -1 for invalid card enum values - minimum boundary\n\n");
 
     for(i = 0; i < 1; i++) {
         //get min enum value
@@ -100,7 +101,7 @@ int main(int argc, char** argv) {
 
     }
 
-    printf("-----------------------------------------\nTEST 3: getCost returns -1 for invalid card enum values - maximum boundry\n\n");
+    printf("-----------------------------------------\nTEST 3: getCost returns -1 for invalid card enum values - maximum boundary\n\n");
 
     for(i = 0; i < 1; i++) {
         //get min enum value
@@ -140,7 +141,7 @@ int main(int argc, char** argv) {
             returnedName = getEnumName(y);
             printf("Card: %s\n", returnedName);
             printf("Enum value of card: %d\n", y);
-            printf("Indendently verified cost: %d\n", independentlyVerifyCost(y));
+            printf("Independently verified cost: %d\n", independentlyVerifyCost(y));
             printf("getCost returned cost: %d\n", getCost(y));
             if (independentlyVerifyCost(y) == getCost(y)) {
                 printf("Grade: PASS\n\n");
@@ -155,7 +156,7 @@ int main(int argc, char** argv) {
         if (incorrectCostFound > 0) {
             printf("and identified %d cards with an incorrect cost.\n", incorrectCostFound);
         } else {
-            printf("and determiend ALL card costs are accurate.\n");
+            printf("and determined ALL card costs are accurate.\n");
         }
 
     }

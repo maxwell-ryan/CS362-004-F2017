@@ -328,6 +328,7 @@ int fullDeckCount(int player, int card, struct gameState *state) {
   for (i = 0; i < state->deckCount[player]; i++)
     {
       if (state->deck[player][i] == card) count++;
+        
     }
 
   for (i = 0; i < state->handCount[player]; i++)
@@ -420,7 +421,7 @@ int scoreFor (int player, struct gameState *state) {
   int score = 0;
   //score from hand
   for (i = 0; i < state->handCount[player]; i++)
-    {
+{
       if (state->hand[player][i] == curse) { score = score - 1; };
       if (state->hand[player][i] == estate) { score = score + 1; };
       if (state->hand[player][i] == duchy) { score = score + 3; };
@@ -646,7 +647,8 @@ int getCost(int cardNumber)
 //refactored card #1
 int executeSmithy(int currentPlayer, struct gameState *state, int handPos) {
     //+3 Cards
-    for (int i = 0; i <= 3; i++)
+    int i;
+    for (i = 0; i <= 3; i++)
   {
     drawCard(currentPlayer, state);
   }
@@ -706,11 +708,14 @@ int executeCutpurse(int currentPlayer, struct gameState *state, int handPos) {
 
     updateCoins(currentPlayer, state, 2);
 
-    for (int i = 0; i < state->numPlayers; i++)
+    int i;
+    int j, k;
+
+    for (i = 0; i < state->numPlayers; i++)
   {
     if (i == currentPlayer)
       {
-        for (int j = 0; j < state->handCount[i]; j++)
+        for (j = 0; j < state->handCount[i]; j++)
       {
         if (state->hand[i][j] == copper)
           {
@@ -719,7 +724,7 @@ int executeCutpurse(int currentPlayer, struct gameState *state, int handPos) {
           }
         if (j == state->handCount[i])
           {
-            for (int k = 0; k < state->handCount[i]; k++)
+            for (k = 0; k < state->handCount[i]; k++)
           {
             if (DEBUG)
               printf("Player %d reveals card number %d\n", i, state->hand[i][k]);
@@ -745,7 +750,7 @@ int executeGreat_hall(int currentPlayer, struct gameState *state, int handPos) {
     drawCard(currentPlayer, state);
 
     //+1 Actions
-    state->numActions = state->numActions; 
+    state->numActions = state->numActions;
 
     //discard card from hand
     discardCard(handPos, currentPlayer, state, 0);

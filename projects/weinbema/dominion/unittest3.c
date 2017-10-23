@@ -8,6 +8,7 @@
 
 
 #include "dominion.h"
+#include "dominion_helpers.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -110,7 +111,7 @@ int main(int argc, char** argv) {
     //         }
     // }
 
-    printf("-----------------------------------------\nTEST 3: fullDeckCount returns correct deck count (hand and discard set to 0)\n\n");
+    printf("-----------------------------------------\nTEST 2: fullDeckCount returns correct deck count (hand and discard set to 0)\n\n");
     for (i = 0; i < 1; i++) {
         for(j = 0; j < 17; j++) {
 
@@ -157,7 +158,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    printf("-----------------------------------------\nTEST 4: fullDeckCount returns correct hand count (deck and discard set to 0)\n\n");
+    printf("-----------------------------------------\nTEST 3: fullDeckCount returns correct hand count (deck and discard set to 0)\n\n");
     for (i = 0; i < 1; i++) {
         for(j = 0; j < 17; j++) {
             //pile captures the count of deck + hand + discard (each is randomly set to valid value from 0 to MAX_HAND/MAX_DECK)
@@ -203,7 +204,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    printf("-----------------------------------------\nTEST 5: fullDeckCount returns correct discard count (hand and deck set to 0)\n\n");
+    printf("-----------------------------------------\nTEST 4: fullDeckCount returns correct discard count (hand and deck set to 0)\n\n");
     for (i = 0; i < 1; i++) {
         for(j = 0; j < 17; j++) {
             //pile captures the count of deck + hand + discard (each is randomly set to valid value from 0 to MAX_HAND/MAX_DECK)
@@ -249,7 +250,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    printf("-----------------------------------------\nTEST 6: fullDeckCount returns correct count (random pile counts (deck + discard + hand)), for random, valid card argument passed\n\n");
+    printf("-----------------------------------------\nTEST 5: fullDeckCount returns correct count (random pile counts (deck + discard + hand)), for random, valid card argument passed\n\n");
     for (i = 0; i < 1; i++) {
         for (j = 0; j < 10; j++) {
 

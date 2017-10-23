@@ -8,6 +8,7 @@
 
 
 #include "dominion.h"
+#include "dominion_helpers.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -54,7 +55,7 @@ int main(int argc, char** argv) {
 
             //verify value returned is kCard value assigned - any other value must indicate an error
             printf("Current player turn: %d\n", i);
-            printf("Card value exected: %d\n", kCards[0]);
+            printf("Card value expected: %d\n", kCards[0]);
             printf("Card value returned: %d\n", returnedHandCard);
             //verify expectation observed, resulting in test passing
             if (kCards[0] == returnedHandCard) {

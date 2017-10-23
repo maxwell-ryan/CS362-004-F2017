@@ -7,6 +7,7 @@
 
 
 #include "dominion.h"
+#include "dominion_helpers.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -50,13 +51,15 @@ int main(int argc, char** argv) {
     int bonus = 0;
 
     //tracks position, in hand, of card under test
-    int handPos;
+    int handPos = 0;
 
     initializeGame(numPlayers, kCards, randomSeed, &controlGame);
 
-    printf("\n\n-----------------------------------------\nCARD TEST 1: Testing card: %s\n", CARDUNDERTEST);
+    printf("\n\n-----------------------------------------\nCARD TEST 4: Testing card: %s\n", CARDUNDERTEST);
     printf("-----------------------------------------\nTEST 1: great_hall results in exactly 1 card being drawn from player's deck\n\n");
 
+    //set handPos card to great_hall
+    controlGame.hand[currentPlayer][handPos] = great_hall;
     //copy controlGame state to testGame state
     memcpy(&testGame, &controlGame, sizeof(struct gameState));
 

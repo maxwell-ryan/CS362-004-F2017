@@ -7,6 +7,7 @@
 
 
 #include "dominion.h"
+#include "dominion_helpers.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -51,7 +52,7 @@ int main(int argc, char** argv) {
     int valid_non_KCard_count = 7;
 
     //array of all valid card types in play for current game
-    int validCards[(numKCards + valid_non_KCard_count)];
+    int *validCards = malloc(sizeof(int) * (numKCards + valid_non_KCard_count));
 
     //copy all kingdom cards to validCards array
     memcpy((void*)(validCards), (void*)(kCards), (sizeof(int) * numKCards));
@@ -74,12 +75,15 @@ int main(int argc, char** argv) {
     int bonus = 0;
 
     //tracks position, in hand, of card under test
-    int handPos;
+    int handPos = 0;
 
     initializeGame(numPlayers, kCards, randomSeed, &controlGame);
 
-    printf("\n\n-----------------------------------------\nCARD TEST 1: Testing function: %s\n", CARDUNDERTEST);
+    printf("\n\n-----------------------------------------\nCARD TEST 3: Testing card: %s\n", CARDUNDERTEST);
     printf("-----------------------------------------\nTEST 1: cutpurse results in exactly +2 coin to current player\n\n");
+
+    //set handPos card to cutpurse
+    controlGame.hand[currentPlayer][handPos] = cutpurse;
 
     //copy controlGame state to testGame state
     memcpy(&testGame, &controlGame, sizeof(struct gameState));
@@ -272,7 +276,7 @@ int main(int argc, char** argv) {
     manipulatedControlGame.hand[currentPlayer][0] = cutpurse;
 
     //fill each players hand with varying copper amounts
-    for (x = 1; x < numPlayers; x++) {
+    for (x = 0; x < numPlayers; x++) {
         manipulatedControlGame.handCount[x] = 5;
         for (j = 0; j < manipulatedControlGame.handCount[x]; j++) {
 
@@ -282,7 +286,7 @@ int main(int argc, char** argv) {
             //grab random value to override assigned card with copper - ensures variability in test/player copper count
             randomValue = (rand() % 2);
             //assign copper, aside from last opponent who shall remain copper-less for edge testing
-            if (randomValue == 1 && x != (numPlayers - 1)) {
+            if (randomValue == 1 && (x != (numPlayers - 1))) {
                 manipulatedControlGame.hand[x][j] = copper;
                 //printf("COPPER ASSIGNED\n");
             }
@@ -294,49 +298,91 @@ int main(int argc, char** argv) {
 
     cardEffect(cutpurse, choice1, choice2, choice3, &testGame, handPos, &bonus);
 
-    for(x = 0; x < numPlayers; x++) {
-        if (x != currentPlayer) {
+    for(i = 1; i < numPlayers; i++) {
+
             //uncomment to prove unexpected change to hand makeup as result of playing adventurer would be detected by test
             //testGame.hand[currentPlayer][y] = duchy;
+            //printf("i IS: %d\n", i);
+            //printf("TOP LVL Count: %d, %d\n", manipulatedControlGame.handCount[i], testGame.handCount[i]);
             int differentMakeupDetected = 0;
 
             int preHandMakeup = 0;
-            for (y = 0; y < manipulatedControlGame.handCount[x]; y++) {
-                preHandMakeup += manipulatedControlGame.hand[x][y];
+            for (y = 0; y < manipulatedControlGame.handCount[i]; y++) {
+                preHandMakeup += manipulatedControlGame.hand[i][y];
             }
 
             int postHandMakeup = 0;
-            for (j = 0; j < testGame.handCount[x]; j++) {
-                postHandMakeup += testGame.hand[x][j];
+            for (j = 0; j < testGame.handCount[i]; j++) {
+                postHandMakeup += testGame.hand[i][j];
             }
+
+            int preCopperCount = 0;
+            int postCopperCount = 0;
+
+            //printf("MID LVL Count: %d, %d\n", manipulatedControlGame.handCount[i], testGame.handCount[i]);
+            for (j = 0; j < manipulatedControlGame.handCount[i]; j++) {
+                if (manipulatedControlGame.hand[i][j] == copper) {
+                    preCopperCount++;
+                }
+            }
+            //printf("MID-MID LVL Count: %d, %d\n", manipulatedControlGame.handCount[i], testGame.handCount[i]);
+            //get copper count from player's current handCard (after cutpurse played)
+            for (j = 0; j < testGame.handCount[i]; j++) {
+                if (testGame.hand[i][j] == copper) {
+                    postCopperCount++;
+                }
+            }
+
+            //check if proper copper discard occured first
+            int properCopperDiscardOccured;
+            //printf("low LVL Count: %d, %d\n", manipulatedControlGame.handCount[i], testGame.handCount[i]);
+            if (preCopperCount >= 1 && (postCopperCount == (preCopperCount - 1))){
+                    properCopperDiscardOccured = 1;
+            } else if (preCopperCount == 0 && postCopperCount == 0){
+                    properCopperDiscardOccured = 1;
+            } else {
+                    properCopperDiscardOccured = 0;
+            }
+
 
             if ((preHandMakeup - 4) != postHandMakeup) {
                 differentMakeupDetected = 1;
             }
 
             printf("Pre-cutpurse hand makeup : ");
-            for (y = 0; y < manipulatedControlGame.handCount[x]; y++) {
-                printf("%d ", manipulatedControlGame.hand[x][y]);
+            //printf("manip hand count: %d\n\n", manipulatedControlGame.handCount[i]);
+            for (y = 0; y < manipulatedControlGame.handCount[i]; y++) {
+                printf("%d ", manipulatedControlGame.hand[i][y]);
             }
             printf("\n");
             printf("Post-cutpurse hand makeup: ");
-            for (y = 0; y < testGame.handCount[x]; y++) {
-                printf("%d ", testGame.hand[x][y]);
+            for (y = 0; y < testGame.handCount[i]; y++) {
+                printf("%d ", testGame.hand[i][y]);
             }
             printf("\n");
-            if (differentMakeupDetected == 1) {
-                printf("Unexpected change to hand makeup detected\n");
+            if (preCopperCount >= 1) {
+                    if (differentMakeupDetected == 1 && properCopperDiscardOccured == 1) {
+                        printf("Unexpected change to hand makeup detected\n");
+                        printf("Grade: FAILURE\n\n");
+                        failureFound = 1;
+                    } else if (differentMakeupDetected == 1 && properCopperDiscardOccured ==0) {
+                        printf("No unexpected change to hand makeup detected - given proper opponent copper discard did not occur. Solve proper discard to fully realize this test's value.\n");
+                        printf("Grade: PASS\n\n");
+                    } else {
+                        printf("No unexpected change to hand makeup detected\n");
+                        printf("Grade: PASS\n\n");
+                    }
             } else {
-                printf("No unexpected change to hand makeup detected\n");
+                    if (preHandMakeup == postHandMakeup){
+                            printf("Opponent hand has no copper and no unexpected change to hand makeup detected.\n");
+                            printf("Grade: FAILURE\n\n");
+                            failureFound = 1;
+                    } else {
+                            printf("Opponent hand has no copper and but unexpected change to hand makeup detected.\n");
+                            printf("Grade: FAILURE\n\n");
+                            failureFound = 1;
+                    }
             }
-
-            if (!differentMakeupDetected) {
-                printf("Grade: PASS\n\n");
-            } else {
-                printf("Grade: FAILURE\n\n");
-                failureFound = 1;
-            }
-        }
     }
 
     if (failureFound == 0) {
