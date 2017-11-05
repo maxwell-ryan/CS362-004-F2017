@@ -1,3 +1,5 @@
+//.final.
+
 #include "dominion.h"
 #include "dominion_helpers.h"
 #include <stdio.h>
@@ -244,9 +246,9 @@ int checkAdventurer(int currentPlayer, struct gameState* testGame, struct gameSt
   preAdventurerTreasureCount = preHand.total;
   postAdventurerTreasureCount = postHand.total;
 
-
+  printf("-----------------------------------------");
   if ((postAdventurerTreasureCount - preAdventurerTreasureCount) != expectedTreasureCountDelta){
-    printf("-----------------------------------------\nTEST 1: %s results in exactly 2 treasure cards being added to player's hand\n\n", CARDUNDERTEST);
+    printf("\nTEST 1: %s results in exactly 2 treasure cards being added to player's hand\n", CARDUNDERTEST);
     printf("Test 1 Grade: FAILURE\n");
     printf("Hand treasure pre: %d (%d copper, %d silver, %d gold)\n", preAdventurerTreasureCount, preHand.copper, preHand.silver, preHand.gold);
     printf("Hand treasure post: %d (%d copper, %d silver, %d gold)\n", postAdventurerTreasureCount, postHand.copper, postHand.silver, postHand.gold);
@@ -261,7 +263,7 @@ int checkAdventurer(int currentPlayer, struct gameState* testGame, struct gameSt
   }
 
   if ((testGame->numActions - controlGame->numActions) != expectedActionCountDelta) {
-    printf("\nTEST 2: adventurer results in consumption of exactly 1 action\n\n");
+    printf("\nTEST 2: adventurer results in consumption of exactly 1 action\n");
     printf("Test 2 - Number of Actions -1\n");
     printf("Grade: FAILURE\n");
     printf("Pre action count: %d\n", controlGame->numActions);
@@ -273,7 +275,7 @@ int checkAdventurer(int currentPlayer, struct gameState* testGame, struct gameSt
 
   if (((testGame->handCount[currentPlayer] - controlGame->handCount[currentPlayer]) - (postAdventurerTreasureCount - preAdventurerTreasureCount)) != 0){
 
-    printf("\nTEST 3: hand remains unchanged when playing %s aside from addition of 2 treasure cards\n\n", CARDUNDERTEST);
+    printf("\nTEST 3: hand remains unchanged when playing %s aside from addition of 2 treasure cards\n", CARDUNDERTEST);
     printf("Test 3 Grade: FAILURE\n");
     printf("Hand count pre: %d\n", controlGame->handCount[currentPlayer]);
     printf("Hand count post: %d\n", testGame->handCount[currentPlayer]);
@@ -295,7 +297,7 @@ int checkAdventurer(int currentPlayer, struct gameState* testGame, struct gameSt
   if ((preDeck.total + preDiscard.total) ==  0) {
     if ((postAdventurerTreasureCount - preAdventurerTreasureCount) != noTreasureRemainingExpectedDelta) {
 
-      printf("\nTEST 4: Player playing %s while deck contains no treasure cards results in 0 treasure added to hand and NO infinite loop\n\n", CARDUNDERTEST);
+      printf("\nTEST 4: Player playing %s while deck contains no treasure cards results in 0 treasure added to hand and NO infinite loop\n", CARDUNDERTEST);
       printf("Test 4 Grade: FAILURE\n");
       printf("Hand treasure pre: %d (%d copper, %d silver, %d gold)\n", preAdventurerTreasureCount, preHand.copper, preHand.silver, preHand.gold);
       printf("Hand treasure post: %d (%d copper, %d silver, %d gold)\n", postAdventurerTreasureCount, postHand.copper, postHand.silver, postHand.gold);

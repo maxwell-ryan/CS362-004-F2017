@@ -1,3 +1,4 @@
+//.final.
 
 #include "dominion.h"
 #include "dominion_helpers.h"
@@ -131,9 +132,10 @@ int checkSmithy(int currentPlayer, int handPos, struct gameState* testGame, stru
   int failureFound;
   int x;
 
+  printf("-----------------------------------------");
   //verify player has 3 more cards in hand
   if ((controlGame->handCount[currentPlayer] + (3 - 1)) != testGame->handCount[currentPlayer]) {
-    printf("-----------------------------------------\nTEST 1: smithy results in exactly 3 cards being drawn from player's deck\n");
+    printf("\nTEST 1: smithy results in exactly 3 cards being drawn from player's deck\n");
     printf("Test 1 - Hand Count +3\n");
     printf("Grade: FAILURE\n");
     printf("Post hand count: %d, expected %d\n", testGame->handCount[currentPlayer], controlGame->handCount[currentPlayer] + (expectedHandDifference));
