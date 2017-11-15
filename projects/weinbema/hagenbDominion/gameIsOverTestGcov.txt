@@ -1,0 +1,201 @@
+        -:    0:Source:unittest2.c
+        -:    0:Graph:unittest2.gcno
+        -:    0:Data:unittest2.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/***************************************************************************************
+        -:    2:** Author: Brook Hagen
+        -:    3:** Date: 10/22/17
+        -:    4:** Course: CS362 SEII
+        -:    5:** Description: Unit test #2 for Assignment #3
+        -:    6:
+        -:    7:**		--  isGameOver(struct gameState *state)  --
+        -:    8:
+        -:    9:**	Include the following in your makefile:
+        -:   10:**	unittest1: unittest2.c dominion.o rngs.o
+        -:   11:**		gcc -o unittest2 -g unittest2.c dominion.o rngs.o $(CFLAGS)
+        -:   12:
+        -:   13:** Resources:
+        -:   14:**		Example files provided by CS 362 instructor
+        -:   15:**		https://lostechies.com/derekgreer/2011/03/14/effective-tests-a-unit-test-example/
+        -:   16:**		http://www.dummies.com/programming/c/how-to-generate-random-numbers-in-c-programming/
+        -:   17:***************************************************************************************/
+        -:   18:
+        -:   19:#include "dominion.h"
+        -:   20:#include "interface.h"
+        -:   21:#include "dominion_helpers.h"
+        -:   22:#include "rngs.h"
+        -:   23:#include <assert.h>
+        -:   24:#include <string.h>
+        -:   25:#include <stdio.h>
+        -:   26:#include <stdlib.h>
+        -:   27:#include <time.h>			//for random number generation
+        -:   28:
+        -:   29://set PRINT_OUT to 0 to remove print statements from output
+        -:   30:#define PRINT_OUT 1
+        -:   31:
+        -:   32://Test Method for isGameOver()
+function main called 1 returned 100% blocks executed 92%
+        1:   33:int main() {
+        -:   34:	
+        -:   35:	int i, j, r;			// i = supply counter; j = loop counter; r is for rand()
+        -:   36:
+        1:   37:	int seed = 500;
+        -:   38:
+        -:   39:	//set up counts for 2 player game
+        1:   40:	int numPlayer = 2;
+        -:   41:	int newGame;			//p = # players, newGame = initializeGame
+        -:   42:	
+        -:   43:	//set kingdom cards
+        1:   44:	int k[10] = {adventurer, council_room, feast, gardens, mine, remodel, smithy, 
+        -:   45:		village, baron, great_hall};
+        -:   46:	struct gameState G;
+        -:   47:	
+        1:   48:	printf("TESTING isGameOver():\n");
+call    0 returned 100%
+        -:   49:
+        -:   50:
+        -:   51:	//16Oct17 06:55
+        -:   52:	//r = initializeGame(numPlayer, k, seed, &G);
+        -:   53:	#if (PRINT_OUT ==1)
+        -:   54:
+        1:   55:		printf("Test #1: initialize all supply counts to 0. isGameOver should be True.\n");
+call    0 returned 100%
+       27:   56:		for (i = 0; i <= 25; i++) 
+branch  0 taken 96%
+branch  1 taken 4% (fallthrough)
+        -:   57:		{
+       26:   58:			printf("Supply for card %d is %d.\n", i, G.supplyCount[i]);
+call    0 returned 100%
+        -:   59:		}
+        1:   60:		printf("\nisGameOver = %d, expected = %d\n\n", isGameOver(&G), 1);
+call    0 returned 100%
+call    1 returned 100%
+        -:   61:	#endif
+        1:   62:		assert(isGameOver(&G) == 1); //check that game is over when counts == 0
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+call    3 never executed
+        -:   63:
+        -:   64:	#if (PRINT_OUT == 1)
+        1:   65:		printf("Test#2: initialize new game with full counts for 2 players.\n");
+call    0 returned 100%
+        1:   66:		printf("isGameOver should be False.\n");
+call    0 returned 100%
+        1:   67:		newGame = initializeGame(numPlayer, k, seed, &G);	//initialize new game
+call    0 returned 100%
+       27:   68:		for (i = 0; i <= 25; i++) 
+branch  0 taken 96%
+branch  1 taken 4% (fallthrough)
+        -:   69:		{
+       26:   70:			printf("Supply for card %d is %d.\n", i, G.supplyCount[i]);
+call    0 returned 100%
+        -:   71:		}
+        1:   72:		printf("\nisGameOver = %d, expected = %d\n\n", isGameOver(&G), 0);
+call    0 returned 100%
+call    1 returned 100%
+        -:   73:	#endif
+        1:   74:		assert(isGameOver(&G) == 0); //check that game is on when counts != 0
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+call    3 never executed
+        -:   75:
+        -:   76:	#if (PRINT_OUT == 1)
+        1:   77:		printf("Test#3: set province card count to 0. isGameOver should be True.\n");
+call    0 returned 100%
+        1:   78:		G.supplyCount[province] = 0;
+        1:   79:		printf("Supply for card province is %d.\n", G.supplyCount[province]);
+call    0 returned 100%
+        1:   80:		printf("\nisGameOver = %d, expected = %d\n\n", isGameOver(&G), 1);
+call    0 returned 100%
+call    1 returned 100%
+        -:   81:	#endif
+        1:   82:		assert(isGameOver(&G) == 1); //check that game is over when province = 0
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+call    3 never executed
+        -:   83:
+        1:   84:		memset(&G, 17, sizeof(struct gameState));	//clear game
+        -:   85:	#if (PRINT_OUT == 1)
+        1:   86:		printf("Test#4: initialize new game ans set each card supply = 1.\n");
+call    0 returned 100%
+        1:   87:		printf("isGameOver should be False.\n");
+call    0 returned 100%
+        1:   88:		newGame = initializeGame(numPlayer, k, seed, &G);	//initialize new game
+call    0 returned 100%
+       27:   89:		for (i = 0; i <= 25; i++) 
+branch  0 taken 96%
+branch  1 taken 4% (fallthrough)
+        -:   90:		{
+       26:   91:			G.supplyCount[i] = 1;
+        -:   92:
+       26:   93:			printf("Supply for card %d is %d.\n", i, G.supplyCount[i]);
+call    0 returned 100%
+        -:   94:		}
+        1:   95:		printf("\nisGameOver = %d, expected = %d\n\n", isGameOver(&G), 0);
+call    0 returned 100%
+call    1 returned 100%
+        -:   96:	#endif
+        1:   97:		assert(isGameOver(&G) == 0); //check that game is on when counts > 0
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+call    3 never executed
+        -:   98:
+        1:   99:		memset(&G, 17, sizeof(struct gameState));	//clear game
+        1:  100:		newGame = initializeGame(numPlayer, k, seed, &G);	//initialize new game
+call    0 returned 100%
+        -:  101:	#if (PRINT_OUT == 1)
+        1:  102:		printf("Test#5: In a loop that runs 300 times, randomly set three card\n"); 
+call    0 returned 100%
+        1:  103:		printf("supplies to empty. isGameOver should be True on each iteration.\n");
+call    0 returned 100%
+      301:  104:		for (j = 0; j < 300; j++) 
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+        -:  105:		{
+        -:  106:			//set three stacks to = 0
+     1239:  107:			for (i = 0; i < 3; i++)
+branch  0 taken 76%
+branch  1 taken 24% (fallthrough)
+        -:  108:			{
+      939:  109:				r = rand() % 25;	//generate random number between 0 and 24
+call    0 returned 100%
+      939:  110:				if (G.supplyCount[r] == 0)	//if count at r is already 0
+branch  0 taken 4% (fallthrough)
+branch  1 taken 96%
+        -:  111:				{
+       39:  112:					i--;	//decrement i
+        -:  113:				}
+        -:  114:				else
+      900:  115:					G.supplyCount[r] = 0;	//else, set the current card count to 0
+        -:  116:			}
+        -:  117:
+        -:  118:			/*** Uncomment the following for loop to see the counts for each card type */
+        -:  119:			// for (i = 0; i <= 25; i++) 
+        -:  120:			// {
+        -:  121:			// 	printf("\tSupply for card %d is %d.\n", i, G.supplyCount[i]);
+        -:  122:			// }
+        -:  123:
+      300:  124:			printf("Try %d: isGameOver = %d, expected = %d\n", j+1, isGameOver(&G), 1);
+call    0 returned 100%
+call    1 returned 100%
+      300:  125:			assert(isGameOver(&G) == 1); //check that game is over when three counts = 0
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+call    3 never executed
+      300:  126:			memset(&G, 17, sizeof(struct gameState));	//clear game
+      300:  127:			newGame = initializeGame(numPlayer, k, seed, &G);	//initialize new game
+call    0 returned 100%
+        -:  128:		}
+        -:  129:		
+        -:  130:	#endif
+        -:  131:
+        1:  132:	printf("\n>>>>>>  Testing of isGameOver() complete. All tests passed! <<<<<<<\n\n");
+call    0 returned 100%
+        -:  133:
+        -:  134:}

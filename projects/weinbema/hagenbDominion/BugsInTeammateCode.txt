@@ -1,0 +1,398 @@
+﻿Bug Report #1
+==============================
+
+Title: Smithy incorrectly results in 4 cards drawn to hand     
+
+Class: Dominion Card function - Smithy – func smithyCard()
+
+
+Date: 11/14/17          
+Reported By: Max Weinberger (weinbema)  
+Email: weinbema@oregonstate.edu     
+
+
+Product: Dominion		Version: v2 (hagenb-assignment-2)
+Platform: MacOS 		Version: 10.12.6         
+Browser: n/a           Version: n/a
+File: Dominion.c     
+
+Is it reproducible: Yes
+
+Description
+===========
+Player playing the Smithy card will draw 1 too many cards into their hand, resulting in 4 drawn cards instead of 3. During testing, when player whose turn it was played Smithy, there ending hand count was 1 more than it should have been (net 3 after 1 discard). Corroborated by observing deck count change as well. Deck count decremented by 4 instead of 3.
+
+Steps to Produce/Reproduce
+--------------------------
+Ensure player’s hand includes at least 1 Smithy card, make player play Smithy during action phase of turn.
+
+
+Expected Results
+----------------
+Expected to observe player drawing exactly 3 cards from deck into hand. 
+
+
+Actual Results
+--------------
+Observed player drawing exactly 4 cards from deck into hand.
+
+
+Workarounds
+-----------
+None. Playing Smithy results in this behavior every time. Behavior appears tied to source code implementation and cannot be worked around.
+
+
+
+Attachments
+-----------
+No attachments, see unittestresults.out for specific test output.
+
+
+Other Information
+-----------------
+No other information available. All information included in report.
+
+
+
+
+
+
+Bug Report #2
+==============================
+
+Title: Playing Smithy does not result in consumption of an action     
+
+Class: Dominion Card function - Smithy – func smithyCard()
+
+
+Date: 11/14/17          
+Reported By: Max Weinberger (weinbema)  
+Email: weinbema@oregonstate.edu     
+
+
+Product: Dominion		Version: v2 (hagenb-assignment-2)
+Platform: MacOS 		Version: 10.12.6         
+Browser: n/a           Version: n/a
+File: Dominion.c     
+
+Is it reproducible: Yes
+
+Description
+===========
+Player’s action count immediately before playing Smithy and immediately after playing Smithy is exactly the same, rather than being decremented by 1, the number of actions required to play Smithy.
+
+Steps to Produce/Reproduce
+--------------------------
+Ensure player’s hand includes at least 1 Smithy card, make player play Smithy during action phase of turn. Random testing indicates player can have any action count before playing Smithy, bug/fault observed no matter what action value is.
+
+
+Expected Results
+----------------
+Expected to observe player’s action count decrement by exactly 1 immediately after the Smithy card is played, as playing Smithy requires 1 action. 
+
+Actual Results
+--------------
+Observed player’s action count remaining unchanged after playing Smithy – no action consumed, no decrement observed.
+
+
+Workarounds
+-----------
+None. Playing Smithy results in this behavior every time. Behavior appears tied to source code implementation and cannot be worked around.
+
+
+Attachments
+-----------
+No attachments, see unittestresults.out for specific test output.
+
+
+Other Information
+-----------------
+Please refer to Bug Report #4 below. Same bug/fault/behavior observed when playing Adventurer. This may indicate that the unexpected behavior relates to functions func smithyCard() depends on (calls internally), rather than source code directly related to the implementation of smithyCard(), further investigation is warranted.
+
+
+
+
+
+
+Bug Report #3
+==============================
+
+Title: Adventurer fails to recognize copper as a treasure card, resulting in excessive drawing until 2 silver or gold are found, rather than 2 copper, silver, or gold.      
+
+Class: Dominion Card function - Adventurer – func adventurerCard()
+
+
+Date: 11/14/17          
+Reported By: Max Weinberger (weinbema)  
+Email: weinbema@oregonstate.edu     
+
+
+Product: Dominion		Version: v2 (hagenb-assignment-2)
+Platform: MacOS 		Version: 10.12.6         
+Browser: n/a           Version: n/a
+File: Dominion.c     
+
+Is it reproducible: Yes
+
+
+
+Description
+===========
+Player playing the Adventurer card will draw too many cards from deck/discard because card/func does not recognize the copper card as a treasure card. Treasure cards in Dominion should include copper, silver, and gold. Adventurer considers treasure cards as just silver and gold. As a result, any copper drawn after playing Adventurer is incorrectly discarded and player continues to draw cards until two treasure cards (silver or gold) are drawn. This happens for any player using Adventurer during the action phase of their turn.
+
+Steps to Produce/Reproduce
+--------------------------
+Ensure player’s hand includes at least 1 Adventurer card, make player play Adventurer during action phase of turn, also ensuring that they have copper at least 1 copper in deck, before 2 instances of silver and/or gold, ensuring that this behavior can be observed before Adventurer stops drawing because 2 silver/gold treasure cards were already drawn.
+
+
+Expected Results
+----------------
+Expected to observe player drawing until exactly 2 treasure cards are drawn, those treasure cards are kept and placed in hand, all other cards drawn are discarded.
+
+
+Actual Results
+--------------
+Observed player drawing more than 2 treasure cards, all none treasure cards and copper were discarded, while silver and gold treasure cards drawn were kept and counted against the 2 treasure cards being sought.
+
+
+Workarounds
+-----------
+None. Playing Adventurer results in this behavior every time. Behavior appears tied to source code implementation and cannot be worked around. 
+
+
+Attachments
+-----------
+No attachments, see unittestresults.out for specific test output.
+
+
+Other Information
+-----------------
+No other information available. All information included within this report.
+
+
+
+Bug Report #4
+==============================
+
+Title: Playing Adventurer does not result in consumption of an action     
+
+Class: Dominion Card function - Adventurer – func adventurerCard()
+
+
+Date: 11/14/17          
+Reported By: Max Weinberger (weinbema)  
+Email: weinbema@oregonstate.edu     
+
+
+Product: Dominion		Version: v2 (hagenb-assignment-2)
+Platform: MacOS 		Version: 10.12.6         
+Browser: n/a           Version: n/a
+File: Dominion.c     
+
+Is it reproducible: Yes
+
+Description
+===========
+Player’s action count immediately before playing Adventurer and immediately after playing Adventurer is exactly the same, rather than being decremented by 1, the number of actions required to play Adventurer.
+
+Steps to Produce/Reproduce
+--------------------------
+Ensure player’s hand includes at least 1 Adventurer card, make player play Adventurer during action phase of turn. Random testing indicates player can have any action count before playing Adventurer, bug/fault observed no matter what action value is.
+
+
+Expected Results
+----------------
+Expected to observe player’s action count decrement by exactly 1 immediately after the Adventurer card is played, as playing Adventurer requires 1 action. 
+
+Actual Results
+--------------
+Observed player’s action count remaining unchanged after playing Adventurer – no action consumed, no decrement observed.
+
+
+Workarounds
+-----------
+None. Playing Adventurer results in this behavior every time. Behavior appears tied to source code implementation and cannot be worked around.
+
+
+
+Attachments
+-----------
+No attachments, see unittestresults.out for specific test output.
+
+
+Other Information
+-----------------
+Please refer to Bug Report #2 below. Same bug/fault/behavior observed when playing Smithy. This may indicate that the unexpected behavior relates to functions func adventurerCard() depends on (calls internally), rather than source code directly related to the implementation of adventurerCard (), further investigation is warranted.
+
+
+
+
+
+
+Bug Report #5
+==============================
+
+Title: Playing Smithy does not result in discard count incrementing by 1
+
+Class: Dominion Card function - Smithy – func smithyCard()
+
+
+Date: 11/14/17          
+Reported By: Max Weinberger (weinbema)  
+Email: weinbema@oregonstate.edu     
+
+
+Product: Dominion		Version: v2 (hagenb-assignment-2)
+Platform: MacOS 		Version: 10.12.6         
+Browser: n/a           Version: n/a
+File: Dominion.c     
+
+Is it reproducible: Yes
+
+Description
+===========
+Player’s discard count immediately before playing Smithy and immediately after playing Smithy is exactly the same, rather than being incremented by 1, as the Smithy card must be removed from the hand in order to be played.
+
+Steps to Produce/Reproduce
+--------------------------
+Ensure player’s hand includes at least 1 Smithy card, make player play Smithy during action phase of turn. Measure discard count of player playing Smithy card immediately before the card is played, and immediately after the card is played.
+
+
+
+Expected Results
+----------------
+Expected to observe player’s discard count increment by exactly 1 immediately after the Smithy card is played, as playing Smithy requires the card be removed from the hand and discarded at turn end. 
+
+Actual Results
+--------------
+Observed player’s discard count remaining unchanged after playing Smithy – no no increase in discard count despite removal of Smithy card from player’s hand. 
+
+Workarounds
+-----------
+None. Playing Smithy results in this behavior every time. Behavior appears tied to source code implementation and cannot be worked around.
+
+Attachments
+-----------
+No attachments, see unittestresults.out for specific test output.
+
+Other Information
+-----------------
+It has been considered that this is not directly related to Smithy code implementation and rather is a result of the order/sequence of dependent functions called during a player’s turn, including the buying, action, and discard phase. Potentially not a full bug, but this does warrant further investigation to ensure that this presumption is in fact true, that this is intended behavior and not a bug.
+
+
+
+
+
+
+Bug Report #6
+==============================
+
+Title: handCard function allows lookup of card value (enum) on invalid hand position arguments passed
+
+Class: Dominion function – func handCard()
+
+
+Date: 11/14/17          
+Reported By: Max Weinberger (weinbema)  
+Email: weinbema@oregonstate.edu     
+
+
+Product: Dominion		Version: v2 (hagenb-assignment-2)
+Platform: MacOS 		Version: 10.12.6         
+Browser: n/a           Version: n/a
+File: Dominion.c     
+
+Is it reproducible: Yes
+
+Description
+===========
+Function handCard() allows the program under test to evaluate what card is in a certain position in a player’s hand. handCard() accepts as an argument the hand position desired, and returns the card value (enum) at that position. As implemented, handCard() accepts invalid hand positions as a valid argument.
+
+Steps to Produce/Reproduce
+--------------------------
+Ensure player’s hand includes at least 1 card, then pass handCard a position greater than that player’s hand count minus 1 ( ie. 
+gameState->handCount[gameState→whoseTurn()], or greater). 
+
+Expected Results
+----------------
+When given a handPos greater than the number of cards the player has in his/her hand, handPos should return -1, as using such a value would result in exceeding the memory boundary of the hand array.
+
+Actual Results
+--------------
+When given a handPos greater than the number of cards in the current player’s hand, handPos does not return -1, instead handPos will run, leading to undefined behavior, as it will be accessing memory not currently in use for the current player’s valid hand. 
+
+Workarounds
+-----------
+None. Playing Smithy results in this behavior every time. Behavior appears tied to source code implementation and cannot be worked around.
+
+Attachments
+-----------
+No attachments, see unittestresults.out for specific test output.
+
+Other Information
+-----------------
+No other information. All information currently known and understood is in this report.
+
+
+
+
+
+
+
+
+
+
+Bug Report #7
+==============================
+
+Title: fullDeckCount() function does not return the correct value of (deckCount + handCount + discardCount).
+
+Class: Dominion function – func handCard()
+
+
+Date: 11/14/17          
+Reported By: Max Weinberger (weinbema)  
+Email: weinbema@oregonstate.edu     
+
+
+Product: Dominion		Version: v2 (hagenb-assignment-2)
+Platform: MacOS 		Version: 10.12.6         
+Browser: n/a           Version: n/a
+File: Dominion.c     
+
+Is it reproducible: Yes
+
+Description
+===========
+fullDeckCount() needs to be re-written to not require a specific card parameter. While a function that counts the number of occurrences of card X in a deck could be useful, the context of this function, and its name, suggest that the function should return the count of a player’s entire deck (deck + hand + discard). 
+
+Steps to Produce/Reproduce
+--------------------------
+Create a test game scenario, giving a player a random number of cards in their hand, deck, and discard. Ensure that these values are known before calling fullDeckCount(), the value shall be the exact result of adding the player’s deckCount + discardCount + handCount variables. You can pass any value as the fullDeckCount() ‘int card’ parameter, so long as that value is a valid Dominion card enum value.
+
+Expected Results
+----------------
+fullDeckCount should return the exact result of player’s deckCount + discardCount + handCount variables.
+
+Actual Results
+--------------
+fullDeckCount returns the value of deckCount + discardCount + handCount variables only with respect to the ‘int card’ value passed. That is, it returns the count of a specific card, rather than of ALL cards.
+
+
+
+
+Workarounds
+-----------
+None via function call. The developer could choose to manually add the deckCount, discardCount, and handCount values, but this would totally circumvent the function under test and is therefore not a true workaround.
+
+Attachments
+-----------
+No attachments, see unittestresults.out for specific test output.
+
+Other Information
+-----------------
+No other information. All information currently known and understood is in this report.
+
+
+
+
