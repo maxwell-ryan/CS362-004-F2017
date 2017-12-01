@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-
+//Brook Hagen, Ivan Xa, Max Weinberger Project Part B submission
 import junit.framework.TestCase;
 
 /**
